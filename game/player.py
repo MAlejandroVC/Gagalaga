@@ -7,6 +7,11 @@ from game.ship import Ship
 
 
 class Player(Ship):
+    """
+    Player class.
+    Extends the Ship class.
+    """
+
     # Player Magic Numbers
     STARTING_X = 1250 / 2
     STARTING_Y = 750 / 2
@@ -15,6 +20,11 @@ class Player(Ship):
         super().__init__(self.STARTING_X, self.STARTING_Y)
 
     def move(self, keys):
+        """
+        Moves the player in a given direction depending on the keys pressed.
+        Also shoots if the space bar is pressed.
+        :param keys: keys pressed.
+        """
         if keys[pygame.K_w]:
             super().move('up')
         if keys[pygame.K_s]:
