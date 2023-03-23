@@ -5,6 +5,7 @@ Galaga game
 import pygame
 import pymunk
 import pymunk.pygame_util
+from game.player import Player
 
 # Initialize pygame
 pygame.init()
@@ -17,7 +18,7 @@ space = pymunk.Space()
 space.gravity = 0, 0
 
 # Create a player
-player = Player()
+player = Player(Player.STARTING_X, Player.STARTING_Y)
 space.add(player.body, player.shape)
 
 # Draw options
@@ -42,11 +43,10 @@ while running:
 
     # Move player
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w or pygame.K_a or pygame.K_s or pygame.K_d or pygame.K_SPACE]:
-        # player.move()
-        pass
+    player.move(keys)
 
     # Clock
+    pygame.display.flip()
     clock.tick(50)
 
 pygame.quit()
