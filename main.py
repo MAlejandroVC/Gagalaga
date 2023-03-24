@@ -7,24 +7,18 @@ import pymunk
 import pymunk.pygame_util
 from game import settings
 from game.player import Player
+from game.singleton import *
 
 # Initialize pygame
 pygame.init()
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
-# Initialize pymunk
-space = pymunk.Space()
-space.gravity = settings.GRAVITY_X, settings.GRAVITY_Y
-
-# Create Singletons
-# TODO: space singleton
-# TODO: screen singleton
-# TODO: clock singleton
+# Create Space Singleton
+space = SpaceSingleton()
 
 # Create a player
 player = Player(Player.STARTING_X, Player.STARTING_Y)
-space.add(player.body, player.shape)
 
 # Create enemies
 # TODO: create enemies

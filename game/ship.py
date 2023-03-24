@@ -5,6 +5,7 @@ import pygame
 import pymunk
 import pymunk.pygame_util
 from game.weapon import Projectile
+from game.singleton import *
 
 
 class Ship:
@@ -28,12 +29,16 @@ class Ship:
     THRUST_LEFT = (-1*THRUST_CONSTANT, 0)  # Thrust vector pointing left
     THRUST_RIGHT = (1*THRUST_CONSTANT, 0)  # Thrust vector pointing right
 
+    __space = SpaceSingleton()  # This feels wrong
+
     def __init__(self, x, y):
         self.body = pymunk.Body(self.SHIP_MASS, self.SHIP_MOMENT)
         self.body.position = x, y
         self.shape = pymunk.Poly.create_box(self.body, (self.SHIP_WIDTH, self.SHIP_HEIGHT))  # TODO: Change to a ship
         self.shape.elasticity = self.SHIP_ELASTICITY
         self.shape.friction = self.SHIP_FRICTION
+
+        self.__space.add(self.body, self.shape)
 
     def move(self, direction):
         """
@@ -54,3 +59,5 @@ class Ship:
         Makes the ship shoot a projectile.
         """
         projectile = Projectile(self.body.position.x, self.body.position.y-5, 'up')
+
+        self.__space.add(projectile.body, projectile.shape)
