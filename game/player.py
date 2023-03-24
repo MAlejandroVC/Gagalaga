@@ -4,6 +4,7 @@ This module contains the Player class.
 """
 import pygame
 from game.ship import Ship
+from game import settings
 
 
 class Player(Ship):
@@ -13,8 +14,8 @@ class Player(Ship):
     """
 
     # Player Magic Numbers
-    STARTING_X = 1250 / 2
-    STARTING_Y = 750 / 2
+    STARTING_X = settings.SCREEN_WIDTH / 2
+    STARTING_Y = settings.SCREEN_HEIGHT - Ship.SHIP_HEIGHT - settings.PADDING
 
     def __int__(self):
         super().__init__(self.STARTING_X, self.STARTING_Y)

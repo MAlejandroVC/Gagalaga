@@ -4,6 +4,7 @@ This module contains the Space-ship class.
 import pygame
 import pymunk
 import pymunk.pygame_util
+from game.weapon import Projectile
 
 
 class Ship:
@@ -52,4 +53,4 @@ class Ship:
         """
         Makes the ship shoot a projectile.
         """
-        pass  # TODO: Implement shooting
+        projectile = Projectile(self.body.position.x, self.body.position.y-5, 'up')

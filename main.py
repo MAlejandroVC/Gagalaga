@@ -5,39 +5,48 @@ Galaga game
 import pygame
 import pymunk
 import pymunk.pygame_util
+from game import settings
 from game.player import Player
 
 # Initialize pygame
 pygame.init()
-screen = pygame.display.set_mode((1250, 750))
+screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 clock = pygame.time.Clock()
-running = True
 
 # Initialize pymunk
 space = pymunk.Space()
-space.gravity = 0, 0
+space.gravity = settings.GRAVITY_X, settings.GRAVITY_Y
+
+# Create Singletons
+# TODO: space singleton
+# TODO: screen singleton
+# TODO: clock singleton
 
 # Create a player
 player = Player(Player.STARTING_X, Player.STARTING_Y)
 space.add(player.body, player.shape)
 
+# Create enemies
+# TODO: create enemies
+
 # Draw options
 draw_options = pymunk.pygame_util.DrawOptions(screen)
 
 # Game loop
+running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
     # Clear screen
-    screen.fill((0, 0, 0))
+    screen.fill(settings.SCREEN_COLOR)
 
     # Draw stuff
     space.debug_draw(draw_options)
 
     # Update physics
-    dt = 1.0 / 60.0
+    dt = 1.0 / settings.UPDATES_PER_SECOND
     for x in range(1):
         space.step(dt)
 
@@ -45,8 +54,11 @@ while running:
     keys = pygame.key.get_pressed()
     player.move(keys)
 
+    # Move enemies
+    # TODO: move enemies
+
     # Clock
     pygame.display.flip()
-    clock.tick(50)
+    clock.tick(settings.FRAMES_PER_SECOND)
 
 pygame.quit()
