@@ -58,6 +58,8 @@ class Ship:
         """
         Makes the ship shoot a projectile.
         """
-        projectile = Projectile(self.body.position.x, self.body.position.y-5, 'up')
+        projectile = Projectile(self.body.position.x,
+                                self.body.position.y - self.SHIP_HEIGHT/2 - Projectile.PROJECTILE_RADIUS,
+                                'up')
 
         self.__space.add(projectile.body, projectile.shape)
