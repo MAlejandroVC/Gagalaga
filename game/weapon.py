@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 
 
 class Weapon(ABC):
-    # TODO: add weapon class
+    # TODO: add weapon interface
     pass
 
 

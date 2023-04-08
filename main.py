@@ -46,7 +46,7 @@ while running:
 
     # Move player
     keys = pygame.key.get_pressed()
-    player.move(keys)
+    player.player_key(keys)
 
     # Move enemies
     # TODO: move enemies

@@ -20,7 +20,7 @@ class Player(Ship):
     def __int__(self):
         super().__init__(self.STARTING_X, self.STARTING_Y)
 
-    def move(self, keys):
+    def player_key(self, keys):
         """
         Moves the player in a given direction depending on the keys pressed.
         Also shoots if the space bar is pressed.
