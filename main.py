@@ -12,26 +12,22 @@ from game.singleton import *
 
 # Initialize pygame
 pygame.init()
-screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+screen_singleton = ScreenSingleton(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 clock = pygame.time.Clock()
-
-# Create Space Singleton
 space = SpaceSingleton()
 
 # Create a player
 player = Player(Player.STARTING_X, Player.STARTING_Y)
 
 # Create enemies
-# TODO: Create enemies
-enemies = [1, 2, 3, 4, 5]
-enemies[0] = Enemy(settings.SCREEN_RANK_0, settings.SCREEN_FILE_0)
-enemies[1] = Enemy(settings.SCREEN_RANK_1, settings.SCREEN_FILE_0)
-enemies[2] = Enemy(settings.SCREEN_RANK_2, settings.SCREEN_FILE_0)
-enemies[3] = Enemy(settings.SCREEN_RANK_3, settings.SCREEN_FILE_0)
-enemies[4] = Enemy(settings.SCREEN_RANK_4, settings.SCREEN_FILE_0)
+enemy_timer = 0
+enemies = []
+# for i in range(settings.TOTAL_RANKS):
+#     for j in range(settings.TOTAL_FILES - 3):
+#         enemies.append(Enemy(settings.SCREEN_RANK[i], settings.SCREEN_FILE[j]))
 
 # Draw options
-draw_options = pymunk.pygame_util.DrawOptions(screen)
+draw_options = pymunk.pygame_util.DrawOptions(screen_singleton.screen)
 
 # Game loop
 running = True
@@ -41,10 +37,18 @@ while running:
             running = False
 
     # Clear screen
-    screen.fill(settings.SCREEN_COLOR)
+    screen_singleton.screen.fill(settings.SCREEN_COLOR)
+
+    enemy_timer += clock.get_time()
+    if enemy_timer >= settings.ENEMY_CREATION_INTERVAL and len(enemies) < 10:
+        enemies.append(Enemy(settings.SCREEN_RANK[0], settings.SCREEN_FILE[0]))
+        enemy_timer = 0
 
     # Draw stuff
     space.debug_draw(draw_options)
+    player.draw()
+    for enemy in enemies:
+        enemy.draw()
 
     # Update physics
     dt = 1.0 / settings.UPDATES_PER_SECOND
@@ -56,7 +60,8 @@ while running:
     player.player_key(keys)
 
     # Move enemies
-    # TODO: move enemies
+    for enemy in enemies:
+        enemy.move()
 
     # Clock
     pygame.display.flip()

@@ -62,7 +62,7 @@ while running:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
 
-    # Clear screen
+    # Clear screen_singleton
     screen.fill((255, 255, 255))
 
     # Draw stuff
@@ -73,7 +73,7 @@ while running:
     for x in range(1):
         space.step(dt)
 
-    # Flip screen
+    # Flip screen_singleton
     pygame.display.flip()
     clock.tick(50)
 

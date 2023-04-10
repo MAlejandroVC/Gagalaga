@@ -1,9 +1,13 @@
 """
 This module contains the Space-ship class.
+The ship class handles the physics of the ship.
+The ship class is shared by the player and the enemy.
 """
 import pygame
 import pymunk
 import pymunk.pygame_util
+
+from game import settings
 from game.weapon import Projectile
 from game.singleton import *
 
@@ -13,53 +17,57 @@ class Ship:
     Space-ship class.
     """
 
-    # Ship Magic Numbers
+    # Physics Magic Numbers
     SHIP_MASS = 1
-    SHIP_MOMENT = 1000
-    SHIP_WIDTH = 50
-    SHIP_HEIGHT = 50
-    SHIP_ELASTICITY = 0
-    SHIP_FRICTION = 1
+    SHIP_MOMENT = 10000000
     SHIP_CENTER_OF_GRAVITY = (0, 0)
 
     # Thrust Magic Numbers
-    THRUST_CONSTANT = 500
+    THRUST_CONSTANT = 250
     THRUST_UP = (0, -1*THRUST_CONSTANT)  # Thrust vector pointing upwards
     THRUST_DOWN = (0, 1*THRUST_CONSTANT)  # Thrust vector pointing downwards
     THRUST_LEFT = (-1*THRUST_CONSTANT, 0)  # Thrust vector pointing left
     THRUST_RIGHT = (1*THRUST_CONSTANT, 0)  # Thrust vector pointing right
+    THRUST_NONE = (0, 0)  # No thrust
 
-    __space = SpaceSingleton()  # This feels wrong
+    __space = SpaceSingleton()
 
     def __init__(self, x, y):
         self.body = pymunk.Body(self.SHIP_MASS, self.SHIP_MOMENT)
         self.body.position = x, y
-        self.shape = pymunk.Poly.create_box(self.body, (self.SHIP_WIDTH, self.SHIP_HEIGHT))  # TODO: Change to a ship
-        self.shape.elasticity = self.SHIP_ELASTICITY
-        self.shape.friction = self.SHIP_FRICTION
+        shape = TriangleShape(self.body, self.VERTICES, self.COLOR)
 
-        self.__space.add(self.body, self.shape)
+        self.__space.add(self.body, shape)
 
-    def move(self, direction):
+    def move(self, thrust_direction):
         """
         Applies a force to the ship in the given direction.
-        :param direction: direction in which the force is applied ('up', 'down', 'left', 'right').
+        :param thrust_direction: direction in which the force is applied using Ship.THRUST_DIRECTION.
         """
-        if direction == 'up':
-            self.body.apply_force_at_local_point(self.THRUST_UP, self.SHIP_CENTER_OF_GRAVITY)
-        elif direction == 'down':
-            self.body.apply_force_at_local_point(self.THRUST_DOWN, self.SHIP_CENTER_OF_GRAVITY)
-        elif direction == 'left':
-            self.body.apply_force_at_local_point(self.THRUST_LEFT, self.SHIP_CENTER_OF_GRAVITY)
-        elif direction == 'right':
-            self.body.apply_force_at_local_point(self.THRUST_RIGHT, self.SHIP_CENTER_OF_GRAVITY)
+        # self.body.apply_force_at_local_point(thrust_direction, self.SHIP_CENTER_OF_GRAVITY)
+        self.body.velocity = thrust_direction
 
-    def shoot(self):
+    def shoot(self, direction):
         """
         Makes the ship shoot a projectile.
         """
-        projectile = Projectile(self.body.position.x,
-                                self.body.position.y - self.SHIP_HEIGHT/2 - Projectile.PROJECTILE_RADIUS,
-                                'up')
+        adjusted_position = self.body.position.x + self.VERTICES[1][0], self.body.position.y + self.VERTICES[1][1]
+        projectile = Projectile(adjusted_position[0], adjusted_position[1], direction)
 
         self.__space.add(projectile.body, projectile.shape)
+
+
+class TriangleShape(pymunk.Poly):
+    """
+    Triangle shape class.
+    """
+
+    # Shape Magic Numbers
+    TRIANGLE_ELASTICITY = 0
+    TRIANGLE_FRICTION = 1
+
+    def __init__(self, body, vertices, color=(255, 0, 255, 0)):
+        super().__init__(body, vertices)
+        self.elasticity = self.TRIANGLE_ELASTICITY
+        self.friction = self.TRIANGLE_FRICTION
+        self.color = color
