@@ -7,6 +7,7 @@ import pymunk
 import pymunk.pygame_util
 from game import settings
 from game.player import Player
+from game.enemy import Enemy
 from game.singleton import *
 
 # Initialize pygame
@@ -21,7 +22,13 @@ space = SpaceSingleton()
 player = Player(Player.STARTING_X, Player.STARTING_Y)
 
 # Create enemies
-# TODO: create enemies
+# TODO: Create enemies
+enemies = [1, 2, 3, 4, 5]
+enemies[0] = Enemy(settings.SCREEN_RANK_0, settings.SCREEN_FILE_0)
+enemies[1] = Enemy(settings.SCREEN_RANK_1, settings.SCREEN_FILE_0)
+enemies[2] = Enemy(settings.SCREEN_RANK_2, settings.SCREEN_FILE_0)
+enemies[3] = Enemy(settings.SCREEN_RANK_3, settings.SCREEN_FILE_0)
+enemies[4] = Enemy(settings.SCREEN_RANK_4, settings.SCREEN_FILE_0)
 
 # Draw options
 draw_options = pymunk.pygame_util.DrawOptions(screen)
