@@ -33,12 +33,3 @@ class SpaceSingleton(pymunk.Space, metaclass=SingletonMeta):
     def __init__(self):
         super().__init__()
         self.gravity = settings.GRAVITY_X, settings.GRAVITY_Y
-
-
-class ScreenSingleton(metaclass=SingletonMeta):
-    """
-    Pygame screen_singleton singleton class
-    """
-    def __init__(self, width, height):
-        super().__init__()
-        self.screen = pygame.display.set_mode((width, height))

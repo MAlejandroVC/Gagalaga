@@ -4,3 +4,6 @@ from .weapon import *
 from .ship import *
 from .user_interface import *
 from .singleton import *
+from .game_directors import *
+from .settings import *
+from .projectile import *

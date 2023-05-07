@@ -16,15 +16,21 @@ class Enemy(Ship):
 
     # Shape Magic Numbers
     VERTICES = [(0, 0), (settings.SHIP_WIDTH / 2, settings.SHIP_HEIGHT), (settings.SHIP_WIDTH, 0)]
-    COLOR = (0, 0, 0, 0)
+    COLOR = (0, 0, 255, 0)
 
     # Ship Image
-    PLAYER_IMAGE = pygame.image.load('assets/Enemy/Ship.png')
+    ENEMY_IMAGE = pygame.image.load('assets/Enemy/Ship.png')
 
-    __screen = ScreenSingleton(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+    def __init__(self, starting_x, starting_y):
+        super().__init__(starting_x, starting_y, self.VERTICES, self.COLOR)
 
-    def __int__(self, starting_x, starting_y):
-        super().__init__(starting_x, starting_y)
+    def draw(self, screen):
+        """
+        Draws the enemy.
+        """
+        adjusted_x = self.body.position.x - settings.SHIP_WIDTH * .5
+        adjusted_y = self.body.position.y - settings.SHIP_HEIGHT * .5
+        super().draw(screen, self.ENEMY_IMAGE, adjusted_x, adjusted_y)
 
     def move(self):
         """
@@ -44,13 +50,3 @@ class Enemy(Ship):
                 super().move(Ship.THRUST_DOWN)
             else:
                 super().move(Ship.THRUST_LEFT)
-
-    def draw(self):
-        """
-        Draws the ship on the screen.
-        """
-        scaled_player_image = pygame.transform.scale(self.PLAYER_IMAGE, (settings.SHIP_WIDTH*2, settings.SHIP_HEIGHT*2))
-        adjusted_position = (self.body.position.x - settings.SHIP_WIDTH*.5,
-                             self.body.position.y - settings.SHIP_HEIGHT*.5)
-
-        self.__screen.screen.blit(scaled_player_image, adjusted_position)

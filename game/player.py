@@ -16,7 +16,7 @@ class Player(Ship):
 
     # Shape Magic Numbers
     VERTICES = [(0, 0), (-settings.SHIP_WIDTH / 2, -settings.SHIP_HEIGHT), (-settings.SHIP_WIDTH, 0)]
-    COLOR = (0, 0, 0, 0)
+    COLOR = (0, 255, 0, 0)
 
     # Coordinates
     STARTING_X = settings.SCREEN_WIDTH / 2
@@ -25,20 +25,16 @@ class Player(Ship):
     # Ship Image
     PLAYER_IMAGE = pygame.image.load('assets/Player/Ship.png')
 
-    __screen = ScreenSingleton(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
+    def __init__(self, starting_x, starting_y):
+        super().__init__(starting_x, starting_y, self.VERTICES, self.COLOR)
 
-    def __int__(self):
-        super().__init__(self.STARTING_X, self.STARTING_Y)
-
-    def draw(self):
+    def draw(self, screen):
         """
-        Draws the ship on the screen.
+        Draws the player.
         """
-        scaled_player_image = pygame.transform.scale(self.PLAYER_IMAGE, (settings.SHIP_WIDTH*2, settings.SHIP_HEIGHT*2))
-        adjusted_position = (self.body.position.x - settings.SHIP_WIDTH*1.5,
-                             self.body.position.y - settings.SHIP_HEIGHT*1.5)
-
-        self.__screen.screen.blit(scaled_player_image, adjusted_position)
+        adjusted_x = self.body.position.x - settings.SHIP_WIDTH*1.5
+        adjusted_y = self.body.position.y - settings.SHIP_HEIGHT*1.5
+        super().draw(screen, self.PLAYER_IMAGE, adjusted_x, adjusted_y)
 
     def player_key(self, keys):
         """
