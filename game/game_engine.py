@@ -2,9 +2,7 @@
 This module handles the main class of the game:
 GameObjectFactory, GameLogic, GameRenderer, and Engine.
 """
-import pygame
 import pymunk.pygame_util
-
 from game import settings
 from game.player import Player
 from game.enemy import Enemy

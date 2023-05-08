@@ -7,7 +7,6 @@ import pygame
 import pymunk
 import pymunk.pygame_util
 from game import settings
-from game.weapon import Weapon
 
 
 class Ship:

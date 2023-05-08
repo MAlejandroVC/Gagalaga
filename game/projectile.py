@@ -5,9 +5,7 @@ Concrete implementations are: Bullet, Rocket, and Laser.
 
 import pygame
 import pymunk
-from abc import ABC, abstractmethod
-
-from game import settings
+from abc import ABC
 from game.singleton import SpaceSingleton
 
 

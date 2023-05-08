@@ -5,7 +5,6 @@ The Enemy class extends the Ship class.
 import pygame
 from game.ship import Ship
 from game import settings
-from game.singleton import *
 
 
 class Enemy(Ship):
