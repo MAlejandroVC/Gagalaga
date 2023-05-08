@@ -28,7 +28,7 @@ draw_options = pymunk.pygame_util.DrawOptions(screen)
 
 # Game directors
 game_logic = GameLogic(space, player, enemies)
-game_renderer = GameRenderer(screen, space, draw_options)
+game_renderer = GameRenderer(screen, space, draw_options, debug=False)
 
 # Create collision handler
 player_collision_handler = space.add_collision_handler(settings.PLAYER_COLLISION_TYPE, settings.ENEMY_COLLISION_TYPE)
@@ -51,7 +51,10 @@ while running:
     game_over = game_logic.update(keys)
 
     # Render game
-    game_renderer.render(player, enemies)
+    if game_over:
+        game_renderer.render_game_over()
+    else:
+        game_renderer.render(player, enemies)
 
     # Clock
     clock.tick(settings.FRAMES_PER_SECOND)

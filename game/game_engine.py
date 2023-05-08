@@ -27,7 +27,7 @@ class GameObjectFactory:
         # Add player body to physics space
         self.space.add(player.body, player.shape)
         # Add Gun decorator to player
-        player.add_weapon(Gun)
+        player.equip_weapon(Gun)
 
         return player
 
@@ -78,12 +78,39 @@ class GameLogic:
         :return: True if game over, False otherwise.
         """
         # Check for game over
+        if self.is_game_over():
+            return True
+
+        # Update positions
+        self.__update_positions(keys)
+
+        # Destroy objects that are out of bounds
+        self.__destroy_out_of_bounds_objects()
+
+        # Remove destroyed objects from game
+        self.__remove_destroyed_objects()
+
+        # Update physics simulation
+        self.__update_physics()
+
+        return False
+
+    def is_game_over(self) -> bool:
+        """
+        Checks if game is over.
+        :return: True if game over, False otherwise.
+        """
         if self.player.destroyed:
-            # TODO: Game over
             return True
         if not self.enemies:
             return True
+        return False
 
+    def __update_positions(self, keys: pygame.key.ScancodeWrapper) -> None:
+        """
+        Updates game object positions.
+        :return: None.
+        """
         # Update player position based on user input
         self.player.player_key(keys)
 
@@ -91,27 +118,49 @@ class GameLogic:
         for enemy in self.enemies:
             enemy.move()
 
-        # Remove destroyed objects from game
-        self.enemies = [enemy for enemy in self.enemies if not enemy.destroyed]
-        for weapon in self.player.weapons:
-            weapon.projectiles = [projectile for projectile in weapon.projectiles if not projectile.destroyed]
+    def __destroy_out_of_bounds_objects(self) -> None:
+        """
+        Destroys objects that are out of bounds.
+        :return: None.
+        """
+        # Destroy projectiles that are out of bounds
+        for projectile in self.player.weapon.projectiles:
+            if projectile.body.position.y < 0:
+                projectile.destroy()
+        # Destroy enemies that are out of bounds
+        for enemy in self.enemies:
+            if enemy.body.position.x > settings.SCREEN_WIDTH + settings.SHIP_WIDTH \
+                    or enemy.body.position.x < 0:
+                enemy.destroy()
+        # Destroy player if out of bounds
+        if self.player.body.position.x > settings.SCREEN_WIDTH + settings.SHIP_WIDTH \
+                or self.player.body.position.x < 0:
+            self.player.destroy()
 
-        # Update physics simulation
+    def __remove_destroyed_objects(self) -> None:
+        self.enemies = [enemy for enemy in self.enemies if not enemy.destroyed]
+        self.player.weapon.projectiles = [projectile for projectile in self.player.weapon.projectiles if
+                                          not projectile.destroyed]
+
+    def __update_physics(self) -> None:
+        """
+        Updates physics simulation.
+        :return: None.
+        """
         dt = 1.0 / settings.UPDATES_PER_SECOND
         for x in range(1):
             self.space.step(dt)
-
-        return False
 
 
 class GameRenderer:
     """
     Game renderer class for rendering game objects.
     """
-    def __init__(self, screen: pygame.Surface, space: pymunk.Space, draw_options: pymunk.pygame_util.DrawOptions):
+    def __init__(self, screen: pygame.Surface, space: pymunk.Space, draw_options: pymunk.pygame_util.DrawOptions, debug: bool = False):
         self.screen = screen
         self.space = space
         self.draw_options = draw_options
+        self.debug = debug
 
     def render(self, player: Player, enemies: list[Enemy]) -> None:
         """
@@ -125,15 +174,33 @@ class GameRenderer:
 
         # Draw objects
         player.draw(self.screen)
-        for projectile in [projectile for weapon in player.weapons for projectile in weapon.projectiles]:
-            projectile.draw(self.screen)
+        if player.weapon:
+            for projectile in player.weapon.projectiles:
+                projectile.draw(self.screen)
         for enemy in enemies:
             enemy.draw(self.screen)
-            for projectile in [projectile for weapon in enemy.weapons for projectile in weapon.projectiles]:
-                projectile.draw(self.screen)
+            if enemy.weapon:
+                for projectile in enemy.weapon.projectiles:
+                    projectile.draw(self.screen)
 
         # Draw physics debug information
-        # self.space.debug_draw(self.draw_options)
+        if self.debug:
+            self.space.debug_draw(self.draw_options)
+
+        # Update display
+        pygame.display.flip()
+
+    def render_game_over(self) -> None:
+        """
+        Renders game over screen.
+        :return: None.
+        """
+        # Clear screen
+        self.screen.fill(settings.SCREEN_COLOR)
+
+        # Draw game over image
+        image = pygame.image.load('assets/Other/game_over.png')
+        self.screen.blit(image, (settings.SCREEN_WIDTH / 2 - image.get_width() / 2, settings.SCREEN_HEIGHT / 2 - image.get_height() / 2))
 
         # Update display
         pygame.display.flip()
@@ -175,7 +242,7 @@ class Engine:
         shape_1, shape_2 = arbiter.shapes
 
         # Remove colliding objects from physics space
-        # space.remove(shape_1, shape_2)
+        space.remove(shape_1, shape_2)
 
         # Destroy colliding objects
         shape_1.belonging_object.destroy()

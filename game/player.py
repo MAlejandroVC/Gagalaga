@@ -6,6 +6,7 @@ import pygame
 from game.ship import Ship
 from game.singleton import *
 from game.projectile import Projectile
+from game.weapon import *
 
 
 class Player(Ship):
@@ -20,7 +21,7 @@ class Player(Ship):
 
     # Coordinates
     STARTING_X = settings.SCREEN_WIDTH / 2
-    STARTING_Y = settings.SCREEN_HEIGHT - settings.SHIP_HEIGHT - settings.PADDING
+    STARTING_Y = settings.SCREEN_HEIGHT - settings.PADDING
 
     # Ship Image
     PLAYER_IMAGE = pygame.image.load('assets/Player/Ship.png')
@@ -46,16 +47,22 @@ class Player(Ship):
         :param keys: keys pressed.
         :return: None
         """
-        if keys[pygame.K_w] or keys[pygame.K_s] or keys[pygame.K_a] or keys[pygame.K_d] or keys[pygame.K_SPACE]:
-            if keys[pygame.K_w]:
-                pass  # super().move(Ship.THRUST_UP)
-            if keys[pygame.K_s]:
-                pass  # super().move(Ship.THRUST_DOWN)
-            if keys[pygame.K_a]:
-                super().move(Ship.THRUST_LEFT)
-            if keys[pygame.K_d]:
-                super().move(Ship.THRUST_RIGHT)
-            if keys[pygame.K_SPACE]:
-                super().shoot(Projectile.SHOOT_UP)
+        if keys[pygame.K_w]:
+            pass  # super().move(Ship.THRUST_UP)
+        elif keys[pygame.K_s]:
+            pass  # super().move(Ship.THRUST_DOWN)
+        elif keys[pygame.K_a]:
+            super().move(Ship.THRUST_LEFT)
+        elif keys[pygame.K_d]:
+            super().move(Ship.THRUST_RIGHT)
         else:
             super().move(Ship.THRUST_NONE)
+
+        if keys[pygame.K_SPACE]:
+            super().shoot(Projectile.SHOOT_UP)
+        if keys[pygame.K_1]:
+            super().equip_weapon(Gun)
+        if keys[pygame.K_2]:
+            super().equip_weapon(RocketLauncher)
+        if keys[pygame.K_3]:
+            super().equip_weapon(LaserCannon)

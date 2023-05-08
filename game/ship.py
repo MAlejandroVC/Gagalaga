@@ -37,7 +37,7 @@ class Ship:
         self.shape.collision_type = settings.DEFAULT_COLLISION_TYPE
         self.shape.belonging_object = self
         self.destroyed = False
-        self.weapons = []
+        self.weapon = None
 
     def move(self, thrust_direction: tuple[int, int]) -> None:
         """
@@ -61,13 +61,13 @@ class Ship:
 
         screen.blit(scaled_image, (x, y))
 
-    def add_weapon(self, weapon) -> None:
+    def equip_weapon(self, weapon) -> None:
         """
         Adds a weapon to the ship.
         :param weapon: weapon to add.
         :return: None
         """
-        self.weapons.append(weapon(self))
+        self.weapon = weapon(self)
 
     def shoot(self, direction: tuple[int, int]) -> None:
         """
@@ -75,8 +75,7 @@ class Ship:
         :param direction: direction in which the projectile is shot.
         :return: None
         """
-        for weapon in self.weapons:
-            weapon.shoot(direction)
+        self.weapon.shoot(direction)
 
     def destroy(self) -> None:
         """
