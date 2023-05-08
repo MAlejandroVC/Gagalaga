@@ -22,6 +22,7 @@ class Enemy(Ship):
 
     def __init__(self, starting_x: int, starting_y: int):
         super().__init__(starting_x, starting_y, self.VERTICES, self.COLOR)
+        self.shape.collision_type = settings.ENEMY_COLLISION_TYPE
 
     def draw(self, screen: pygame.Surface) -> None:
         """
@@ -48,7 +49,7 @@ class Enemy(Ship):
             else:
                 super().move(Ship.THRUST_RIGHT)
         if settings.is_odd_file(self.body.position.y):
-            if self.body.position.x <= settings.PADDING + settings.SHIP_WIDTH:
+            if self.body.position.x <= settings.PADDING:
                 super().move(Ship.THRUST_DOWN)
             else:
                 super().move(Ship.THRUST_LEFT)

@@ -18,7 +18,7 @@ space.gravity = settings.GRAVITY_X, settings.GRAVITY_Y
 # Create game objects
 game_object_factory = GameObjectFactory(space)
 player = game_object_factory.create_player(Player.STARTING_X, Player.STARTING_Y)
-enemies = [game_object_factory.create_enemy(rank, settings.SCREEN_FILE[0]) for rank in settings.SCREEN_RANK[::2]]
+enemies = game_object_factory.create_enemy_army(settings.HARD)
 
 # Create screen
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
@@ -31,8 +31,10 @@ game_logic = GameLogic(space, player, enemies)
 game_renderer = GameRenderer(screen, space, draw_options)
 
 # Create collision handler
-collision_handler = space.add_collision_handler(0, 0)
-collision_handler.begin = Engine.on_collision
+player_collision_handler = space.add_collision_handler(settings.PLAYER_COLLISION_TYPE, settings.ENEMY_COLLISION_TYPE)
+enemies_collision_handler = space.add_collision_handler(settings.ENEMY_COLLISION_TYPE, settings.PROJECTILE_COLLISION_TYPE)
+player_collision_handler.begin = Engine.on_collision_player
+enemies_collision_handler.begin = Engine.on_collision_enemy
 
 # Game loop
 running = True

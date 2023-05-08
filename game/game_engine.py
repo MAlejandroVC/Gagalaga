@@ -27,7 +27,7 @@ class GameObjectFactory:
         # Add player body to physics space
         self.space.add(player.body, player.shape)
         # Add Gun decorator to player
-        player.add_weapon(LaserCannon)
+        player.add_weapon(Gun)
 
         return player
 
@@ -43,6 +43,23 @@ class GameObjectFactory:
         self.space.add(enemy.body, enemy.shape)
 
         return enemy
+
+    def create_enemy_army(self, files: int) -> list[Enemy]:
+        """
+        Creates an enemy army.
+        :param files: number of files in the army.
+        :return: list of enemies.
+        """
+        enemies = []
+        for file in settings.SCREEN_FILE[:files]:
+            if settings.is_even_file(file):
+                start = 0
+            else:
+                start = 1
+            for rank in settings.SCREEN_RANK[start::2]:
+                enemies.append(self.create_enemy(rank, file))
+
+        return enemies
 
 
 class GameLogic:
@@ -60,6 +77,13 @@ class GameLogic:
         :param keys: user input.
         :return: True if game over, False otherwise.
         """
+        # Check for game over
+        if self.player.destroyed:
+            # TODO: Game over
+            return True
+        if not self.enemies:
+            return True
+
         # Update player position based on user input
         self.player.player_key(keys)
 
@@ -68,9 +92,6 @@ class GameLogic:
             enemy.move()
 
         # Remove destroyed objects from game
-        if self.player.destroyed:
-            # TODO: Game over
-            return True
         self.enemies = [enemy for enemy in self.enemies if not enemy.destroyed]
         for weapon in self.player.weapons:
             weapon.projectiles = [projectile for projectile in weapon.projectiles if not projectile.destroyed]
@@ -112,7 +133,7 @@ class GameRenderer:
                 projectile.draw(self.screen)
 
         # Draw physics debug information
-        self.space.debug_draw(self.draw_options)
+        # self.space.debug_draw(self.draw_options)
 
         # Update display
         pygame.display.flip()
@@ -124,7 +145,25 @@ class Engine:
     """
 
     @staticmethod
-    def on_collision(arbiter, space: pymunk.Space, data) -> bool:
+    def on_collision_player(arbiter, space: pymunk.Space, data) -> bool:
+        """
+        Collision handler.
+        :param arbiter: ???
+        :param space: space object.
+        :param data: ???
+        :return: True if collision handled, False otherwise.
+        """
+        # Get colliding objects
+        shape_1, shape_2 = arbiter.shapes
+
+        # Destroy colliding objects
+        shape_1.belonging_object.destroy()
+        shape_2.belonging_object.destroy()
+
+        return True
+
+    @staticmethod
+    def on_collision_enemy(arbiter, space: pymunk.Space, data) -> bool:
         """
         Collision handler.
         :param arbiter: ???
@@ -136,7 +175,7 @@ class Engine:
         shape_1, shape_2 = arbiter.shapes
 
         # Remove colliding objects from physics space
-        space.remove(shape_1, shape_2)
+        # space.remove(shape_1, shape_2)
 
         # Destroy colliding objects
         shape_1.belonging_object.destroy()

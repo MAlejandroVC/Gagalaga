@@ -44,7 +44,7 @@ class Weapon:
         :return: None
         """
         adjusted_position = self.ship.body.position.x + self.ship.vertices[1][0], \
-                            self.ship.body.position.y + self.ship.vertices[1][1]
+                            self.ship.body.position.y + self.ship.vertices[1][1] - 25
         self.projectiles.append(self.get_projectile_instance(adjusted_position[0], adjusted_position[1], direction))
 
     def get_projectile_instance(self, x: int, y: int, direction: tuple[int, int]) -> None:
@@ -83,7 +83,7 @@ class RocketLauncher(Weapon):
     Rocket Launcher concrete decorator.
     """
     # Rocket Launcher Magic Numbers
-    BURST = 2
+    BURST = 1
     BURST_COOLDOWN = 1
 
     def get_projectile_instance(self, x: int, y: int, direction: tuple[int, int]) -> Rocket:
@@ -103,7 +103,7 @@ class LaserCannon(Weapon):
     """
     # Laser Cannon Magic Numbers
     BURST = 10
-    BURST_COOLDOWN = 1
+    BURST_COOLDOWN = 2
 
     def get_projectile_instance(self, x: int, y: int, direction: tuple[int, int]) -> Laser:
         """

@@ -36,10 +36,10 @@ for i in range(1, TOTAL_RANKS):
 def is_even_file(y_position) -> bool:
     """
     Returns True if the y_position is in an even file.
-    Allows for a 1 pixel error.
+    Allows for a 5 pixel error.
     """
     for file in SCREEN_FILE[::2]:
-        if abs(y_position - file) <= 1:
+        if abs(y_position - file) <= 5:
             return True
     return False
 
@@ -47,16 +47,21 @@ def is_even_file(y_position) -> bool:
 def is_odd_file(y_position) -> bool:
     """
     Returns True if the y_position is in an odd file.
-    Allows for a 1 pixel error.
+    Allows for a 5 pixel error.
     """
     for file in SCREEN_FILE[1::2]:
-        if abs(y_position - file) <= 1:
+        if abs(y_position - file) <= 5:
             return True
     return False
 
 
+# Game Difficulty
+EASY = 1
+MEDIUM = 2
+HARD = 3
+
 # Collision Types
 DEFAULT_COLLISION_TYPE = 0
 PLAYER_COLLISION_TYPE = 1
-BULLET_COLLISION_TYPE = 2
+PROJECTILE_COLLISION_TYPE = 2
 ENEMY_COLLISION_TYPE = 3

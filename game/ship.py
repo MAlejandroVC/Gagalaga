@@ -34,6 +34,7 @@ class Ship:
         self.vertices = vertices
         self.shape = TriangleShape(self.body, vertices, color)
         self.shape.color = color
+        self.shape.collision_type = settings.DEFAULT_COLLISION_TYPE
         self.shape.belonging_object = self
         self.destroyed = False
         self.weapons = []

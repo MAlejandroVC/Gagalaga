@@ -27,6 +27,7 @@ class Player(Ship):
 
     def __init__(self, starting_x: int, starting_y: int):
         super().__init__(starting_x, starting_y, self.VERTICES, self.COLOR)
+        self.shape.collision_type = settings.PLAYER_COLLISION_TYPE
 
     def draw(self, screen: pygame.Surface) -> None:
         """
