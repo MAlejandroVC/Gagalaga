@@ -1,5 +1,5 @@
 """
-Turn the Space class from Pymunk into a singleton.
+This module turns the Space class from Pymunk into a singleton.
 """
 
 import pymunk

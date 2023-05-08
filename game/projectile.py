@@ -1,6 +1,6 @@
 """
-Projectile module
-Projectile interface and its implementations.
+This module contains the Projectile interface and its concrete implementations.
+Concrete implementations are: Bullet, Rocket, and Laser.
 """
 
 import pygame
@@ -24,11 +24,11 @@ class Projectile(ABC):
 
     # Projectile Movement Magic Numbers
     IMPULSE_CONSTANT = 1000
-    IMPULSE_UP = (0, -1 * IMPULSE_CONSTANT)
-    IMPULSE_DOWN = (0, 1 * IMPULSE_CONSTANT)
+    SHOOT_UP = (0, -1 * IMPULSE_CONSTANT)
+    SHOOT_DOWN = (0, 1 * IMPULSE_CONSTANT)
     CENTER_OF_GRAVITY = (0, 0)
 
-    def __init__(self, x, y, direction):
+    def __init__(self, x: int, y: int, direction: tuple[int, int]):
         self.body = None
         self.shape = None
         self.space = SpaceSingleton()
@@ -39,24 +39,23 @@ class Projectile(ABC):
         self.shape = pymunk.Circle(self.body, self.PROJECTILE_RADIUS)
         self.shape.elasticity = self.PROJECTILE_ELASTICITY
         self.shape.friction = self.PROJECTILE_FRICTION
-        if direction == 'up':
-            self.body.apply_impulse_at_local_point(self.IMPULSE_UP, self.CENTER_OF_GRAVITY)
-        elif direction == 'down':
-            self.body.apply_impulse_at_local_point(self.IMPULSE_DOWN, self.CENTER_OF_GRAVITY)
+        self.body.apply_impulse_at_local_point(direction, self.CENTER_OF_GRAVITY)
         self.shape.color = pygame.color.THECOLORS['white']
         self.space.add(self.body, self.shape)
         self.shape.belonging_object = self
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface) -> None:
         """
         Draws the projectile.
+        :param screen: screen to draw on.
+        :return: None
         """
-        position = int(self.body.position.x), int(self.body.position.y)
-        pygame.draw.circle(screen, self.shape.color, position, self.shape.radius)
+        pass
 
-    def destroy(self):
+    def destroy(self) -> None:
         """
         Destroys the projectile.
+        :return: None
         """
         self.destroyed = True
 
@@ -65,9 +64,7 @@ class Bullet(Projectile):
     """
     Bullet class.
     """
-    IMPULSE_CONSTANT = 1000
-
-    def __init__(self, x, y, direction):
+    def __init__(self, x: int, y: int, direction: tuple[int, int]):
         super().__init__(x, y, direction)
         self.shape.color = pygame.color.THECOLORS['blue']
 
@@ -76,9 +73,7 @@ class Rocket(Projectile):
     """
     Bullet class.
     """
-    IMPULSE_CONSTANT = 750
-
-    def __init__(self, x, y, direction):
+    def __init__(self, x: int, y: int, direction: tuple[int, int]):
         super().__init__(x, y, direction)
         self.shape.color = pygame.color.THECOLORS['green']
 
@@ -87,8 +82,7 @@ class Laser(Projectile):
     """
     Bullet class.
     """
-    IMPULSE_CONSTANT = 1250
 
-    def __init__(self, x, y, direction):
+    def __init__(self, x: int, y: int, direction: tuple[int, int]):
         super().__init__(x, y, direction)
         self.shape.color = pygame.color.THECOLORS['red']

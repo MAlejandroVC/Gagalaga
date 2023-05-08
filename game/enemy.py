@@ -1,6 +1,6 @@
 """
 This module contains the Enemy class.
-
+The Enemy class extends the Ship class.
 """
 import pygame
 from game.ship import Ship
@@ -21,24 +21,27 @@ class Enemy(Ship):
     # Ship Image
     ENEMY_IMAGE = pygame.image.load('assets/Enemy/Ship.png')
 
-    def __init__(self, starting_x, starting_y):
+    def __init__(self, starting_x: int, starting_y: int):
         super().__init__(starting_x, starting_y, self.VERTICES, self.COLOR)
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface) -> None:
         """
         Draws the enemy.
+        :param screen: screen object to draw on.
+        :return: None
         """
         adjusted_x = self.body.position.x - settings.SHIP_WIDTH * .5
         adjusted_y = self.body.position.y - settings.SHIP_HEIGHT * .5
         super().draw(screen, self.ENEMY_IMAGE, adjusted_x, adjusted_y)
 
-    def move(self):
+    def move(self) -> None:
         """
         If the ship is on an even file, it moves to the right.
         If the ship is on an odd file, it moves to the left.
         Once it reaches the end of the screen, it moves down one file.
 
         Uses Ship.move() to move the ship.
+        :return: None
         """
         if settings.is_even_file(self.body.position.y):
             if self.body.position.x >= settings.SCREEN_WIDTH - settings.PADDING - settings.SHIP_WIDTH:

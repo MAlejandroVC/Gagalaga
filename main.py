@@ -3,7 +3,7 @@ Galaga game
 """
 
 import pymunk.pygame_util
-from game.game_directors import *
+from game.game_engine import *
 from game.singleton import SpaceSingleton
 
 
@@ -32,10 +32,11 @@ game_renderer = GameRenderer(screen, space, draw_options)
 
 # Create collision handler
 collision_handler = space.add_collision_handler(0, 0)
-collision_handler.begin = on_collision
+collision_handler.begin = Engine.on_collision
 
 # Game loop
 running = True
+game_over = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -45,7 +46,7 @@ while running:
     keys = pygame.key.get_pressed()
 
     # Update game state
-    game_logic.update(keys)
+    game_over = game_logic.update(keys)
 
     # Render game
     game_renderer.render(player, enemies)

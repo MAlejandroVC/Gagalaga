@@ -1,9 +1,6 @@
 """
-Game settings
+This module handles the settings of the game.
 """
-import pygame
-import pymunk
-import pymunk.pygame_util
 
 # Settings Magic Numbers
 SCREEN_WIDTH = 1250
