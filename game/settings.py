@@ -58,6 +58,8 @@ def is_odd_file(y_position) -> bool:
     return False
 
 
-# Enemy
-NUMBERS_OF_ENEMIES = 20
-ENEMY_CREATION_INTERVAL = 500
+# Collision Types
+DEFAULT_COLLISION_TYPE = 0
+PLAYER_COLLISION_TYPE = 1
+BULLET_COLLISION_TYPE = 2
+ENEMY_COLLISION_TYPE = 3

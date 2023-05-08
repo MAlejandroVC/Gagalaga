@@ -4,7 +4,7 @@ Galaga game
 
 import pymunk.pygame_util
 from game.game_directors import *
-import itertools
+from game.singleton import SpaceSingleton
 
 
 # Initialize pygame
@@ -12,7 +12,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Create physics space
-space = pymunk.Space()
+space = SpaceSingleton()
 space.gravity = settings.GRAVITY_X, settings.GRAVITY_Y
 
 # Create game objects
@@ -30,6 +30,10 @@ draw_options = pymunk.pygame_util.DrawOptions(screen)
 game_logic = GameLogic(space, player, enemies)
 game_renderer = GameRenderer(screen, space, draw_options)
 
+# Create collision handler
+collision_handler = space.add_collision_handler(0, 0)
+collision_handler.begin = on_collision
+
 # Game loop
 running = True
 while running:
@@ -44,7 +48,7 @@ while running:
     game_logic.update(keys)
 
     # Render game
-    game_renderer.render(player, enemies, player.projectiles)
+    game_renderer.render(player, enemies)
 
     # Clock
     clock.tick(settings.FRAMES_PER_SECOND)

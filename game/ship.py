@@ -33,9 +33,9 @@ class Ship:
         self.vertices = vertices
         self.shape = TriangleShape(self.body, vertices, color)
         self.shape.color = color
+        self.shape.belonging_object = self
         self.destroyed = False
         self.weapons = []
-        self.projectiles = []
 
     def move(self, thrust_direction):
         """
@@ -67,22 +67,12 @@ class Ship:
         for weapon in self.weapons:
             weapon.shoot(direction)
 
-    def collides_with(self, other):
+    def destroy(self):
         """
-        Checks if the ship collides with another object.
-        :param other: object to check collision with.
-        :return: True if the ship collides with the object, False otherwise.
+        Destroys the ship.
         """
-        return self.shape.shapes_collide(other.shape)
-
-    def hit(self):
-        """
-        Handles the ship being hit.
-        When the ship is hit, the ship is destroyed.
-        """
-        # TODO: Explosion animation
+        self.body.position = -100, -100
         self.destroyed = True
-        self.shape.color = (255, 0, 0, 0)
 
 
 class TriangleShape(pymunk.Poly):

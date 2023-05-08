@@ -1,14 +1,8 @@
 """
-SingletonMeta class and Singleton class
-
-s1 = Singleton()
-s2 = Singleton()
-
-print(s1 is s2) # True
+Turn the Space class from Pymunk into a singleton.
 """
 
 import pymunk
-import pygame
 from game import settings
 
 

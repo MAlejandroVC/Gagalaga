@@ -1,10 +1,9 @@
 import pygame
-import pymunk
-import pymunk.pygame_util
 from game import settings
 from game.player import Player
 from game.enemy import Enemy
-from game.singleton import *
+from game.weapon import *
+from game.projectile import Projectile
 
 
 class GameObjectFactory:
@@ -15,13 +14,38 @@ class GameObjectFactory:
         player = Player(x, y)
         # Add player body to physics space
         self.space.add(player.body, player.shape)
+        # Add Gun decorator to player
+        player.add_weapon(LaserCannon)
+
         return player
 
     def create_enemy(self, rank, file):
         enemy = Enemy(rank, file)
         # Add enemy body to physics space
         self.space.add(enemy.body, enemy.shape)
+
         return enemy
+
+    def create_projectile(self, x, y, direction):
+        projectile = Projectile(x, y, direction)
+        # Add projectile body to physics space
+        self.space.add(projectile.body, projectile.shape)
+
+        return projectile
+
+
+def on_collision(arbiter, space, data):
+    # Get colliding objects
+    shape_1, shape_2 = arbiter.shapes
+
+    # Remove colliding objects from physics space
+    space.remove(shape_1, shape_2)
+
+    # Destroy colliding objects
+    shape_1.belonging_object.destroy()
+    shape_2.belonging_object.destroy()
+
+    return True
 
 
 class GameLogic:
@@ -38,30 +62,13 @@ class GameLogic:
         for enemy in self.enemies:
             enemy.move()
 
-        # Check for collisions between player and enemies
-        for enemy in self.enemies:
-            if self.player.collides_with(enemy):
-                self.player.hit()
-
-        # Check for collisions between enemies and projectiles
-        for projectile in self.player.projectiles:
-            for enemy in self.enemies:
-                if enemy.collides_with(projectile):
-                    enemy.hit()
-                    # Remove projectile from space
-                    self.space.remove(projectile.body, projectile.shape)
-                    self.player.projectiles.remove(projectile)
-                    break
-
-        # Destroy ships that have been hit
-        # if self.player.destroyed:
-        #     self.space.remove(self.player.body, self.player.shape)
-        #     self.player.destroy()
-        #
-        # for enemy in self.enemies:
-        #     if enemy.destroyed:
-        #         self.space.remove(enemy.body, enemy.shape)
-        #         self.enemies.remove(enemy)
+        # Remove destroyed objects from game
+        if self.player.destroyed:
+            # TODO: Game over
+            return
+        self.enemies = [enemy for enemy in self.enemies if not enemy.destroyed]
+        for weapon in self.player.weapons:
+            weapon.projectiles = [projectile for projectile in weapon.projectiles if not projectile.destroyed]
 
         # Update physics simulation
         dt = 1.0 / settings.UPDATES_PER_SECOND
@@ -75,20 +82,21 @@ class GameRenderer:
         self.space = space
         self.draw_options = draw_options
 
-    def render(self, player, enemies, projectiles):
+    def render(self, player, enemies):
         # Clear screen
         self.screen.fill(settings.SCREEN_COLOR)
 
         # Draw objects
         player.draw(self.screen)
+        for projectile in [projectile for weapon in player.weapons for projectile in weapon.projectiles]:
+            projectile.draw(self.screen)
         for enemy in enemies:
             enemy.draw(self.screen)
-        for projectile in projectiles:
-            projectile.draw(self.screen)
+            for projectile in [projectile for weapon in enemy.weapons for projectile in weapon.projectiles]:
+                projectile.draw(self.screen)
 
         # Draw physics debug information
         self.space.debug_draw(self.draw_options)
 
         # Update display
         pygame.display.flip()
-
