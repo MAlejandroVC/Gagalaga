@@ -3,9 +3,9 @@ This module handles the main class of the game:
 GameObjectFactory, GameLogic, GameRenderer, and Engine.
 """
 import pymunk.pygame_util
-from game import settings
 from game.player import Player
 from game.enemy import Enemy
+from game.ship import Ship
 from game.weapon import *
 
 
@@ -31,14 +31,14 @@ class GameObjectFactory:
 
         return player
 
-    def create_enemy(self, rank: int, file: int) -> Enemy:
+    def create_enemy(self, x: int, y: int) -> Enemy:
         """
         Creates an enemy object.
-        :param rank: x coordinate.
-        :param file: y coordinate.
+        :param x: x coordinate.
+        :param y: y coordinate.
         :return: enemy object.
         """
-        enemy = Enemy(rank, file)
+        enemy = Enemy(x, y)
         # Add enemy body to physics space
         self.space.add(enemy.body, enemy.shape)
 
@@ -162,7 +162,7 @@ class GameRenderer:
         self.draw_options = draw_options
         self.debug = debug
 
-    def render(self, player: Player, enemies: list[Enemy]) -> None:
+    def render(self, player: Ship, enemies: list[Ship]) -> None:
         """
         Renders game objects.
         :param player: player object.

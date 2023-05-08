@@ -4,9 +4,9 @@ The Player class extends the Ship class.
 """
 import pygame
 from game.ship import Ship
-from game.singleton import *
 from game.projectile import Projectile
-from game.weapon import *
+from game.weapon import Gun, RocketLauncher, LaserCannon
+from game import settings
 
 
 class Player(Ship):

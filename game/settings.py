@@ -35,7 +35,7 @@ for i in range(1, TOTAL_RANKS):
 
 def is_even_file(y_position) -> bool:
     """
-    Returns True if the y_position is in an even file.
+    Returns True if the y_position is in an even y.
     Allows for a 5 pixel error.
     """
     for file in SCREEN_FILE[::2]:
@@ -46,7 +46,7 @@ def is_even_file(y_position) -> bool:
 
 def is_odd_file(y_position) -> bool:
     """
-    Returns True if the y_position is in an odd file.
+    Returns True if the y_position is in an odd y.
     Allows for a 5 pixel error.
     """
     for file in SCREEN_FILE[1::2]:

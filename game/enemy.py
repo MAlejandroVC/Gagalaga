@@ -36,9 +36,9 @@ class Enemy(Ship):
 
     def move(self) -> None:
         """
-        If the ship is on an even file, it moves to the right.
-        If the ship is on an odd file, it moves to the left.
-        Once it reaches the end of the screen, it moves down one file.
+        If the ship is on an even y, it moves to the right.
+        If the ship is on an odd y, it moves to the left.
+        Once it reaches the end of the screen, it moves down one y.
 
         Uses Ship.move() to move the ship.
         :return: None

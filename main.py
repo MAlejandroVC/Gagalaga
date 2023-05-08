@@ -5,6 +5,7 @@ Galaga game
 import pymunk.pygame_util
 from game.game_engine import *
 from game.singleton import SpaceSingleton
+from game import settings
 
 
 # Initialize pygame
